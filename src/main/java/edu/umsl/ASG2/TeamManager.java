@@ -16,7 +16,6 @@ public class TeamManager {
 			String teamNumber = "Team" + i;
 			addTeamHibernate(teamNumber, 6, 6, 6, 6, "", 6);
 		}
-//		TeamScore ts1 = new TeamScore("Team1", 6, 6, 6, 6, "", 6);
 	}
 
 	public void addTeamHibernate(String team, int score1, int score2, int score3, int score4, String comm,
@@ -44,5 +43,7 @@ public class TeamManager {
 		session.close();
 
 	}
+	
+	//public void updateEmployee()
 
 }

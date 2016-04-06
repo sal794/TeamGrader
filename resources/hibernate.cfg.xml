@@ -34,5 +34,6 @@
 		<mapping class="edu.umsl.ASG2.TeamScore"/>
 		<mapping class="edu.umsl.ASG2.HibernateUtil"/>
 		<mapping class="edu.umsl.ASG2.TeamManager"/>
+		<mapping class="edu.umsl.ASG2.InputMenu"/>
 	</session-factory>
 </hibernate-configuration>
