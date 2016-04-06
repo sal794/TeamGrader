@@ -6,8 +6,18 @@ package edu.umsl.ASG2;
  */
 public class Main 
 {
+
+	
     public static void main( String[] args )
     {
+    	TeamManager tm = new TeamManager();
+    	tm.addTeams();
+    	
         System.out.println( "Hello World!" );
     }
+
+
+    
+
+
 }

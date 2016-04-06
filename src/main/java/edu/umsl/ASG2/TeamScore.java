@@ -30,6 +30,17 @@ public class TeamScore {
 	@Column(name = "Average")
 	double teamavg;
 
+//	public TeamScore(String string, int i, int j, int k, int l, String string2, int m) {
+//		// TODO Auto-generated constructor stub
+//		this.teamname = string;
+//		this.q1 = i;
+//		this.q2 = j;
+//		this.q3 = k;
+//		this.q4 = l;
+//		this.comments = string2;
+//		this.teamavg = m;
+//	}
+
 	public String getTeamname() {
 		return teamname;
 	}
