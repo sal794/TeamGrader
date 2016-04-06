@@ -14,6 +14,7 @@ public class Main
     	tm.addTeams();
     	
         System.out.println( "Hello World!" );
+        HibernateUtil.shutdown();
     }
 
 

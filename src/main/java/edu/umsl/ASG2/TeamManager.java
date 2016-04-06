@@ -41,7 +41,7 @@ public class TeamManager {
 
 		// Commit the save
 		tx.commit();
-		HibernateUtil.shutdown();
+		session.close();
 
 	}
 
