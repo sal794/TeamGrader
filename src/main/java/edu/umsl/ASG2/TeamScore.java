@@ -1,14 +1,33 @@
 package edu.umsl.ASG2;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "TEAMS")
-public class TeamScore {
+@Table(name="TEAMSCORE")
+public class TeamScore implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
+
 	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="ID")
+	private int id;
+	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	@Column(name = "TeamName")
 	String teamname;
 
@@ -29,17 +48,6 @@ public class TeamScore {
 
 	@Column(name = "Average")
 	double teamavg;
-
-//	public TeamScore(String string, int i, int j, int k, int l, String string2, int m) {
-//		// TODO Auto-generated constructor stub
-//		this.teamname = string;
-//		this.q1 = i;
-//		this.q2 = j;
-//		this.q3 = k;
-//		this.q4 = l;
-//		this.comments = string2;
-//		this.teamavg = m;
-//	}
 
 	public String getTeamname() {
 		return teamname;

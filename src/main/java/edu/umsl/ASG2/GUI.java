@@ -6,10 +6,16 @@ import javax.swing.JFrame;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.JComboBox;
 import java.awt.GridBagConstraints;
 import javax.swing.JTextPane;
+
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
 import javax.swing.JSlider;
 import javax.swing.JLabel;
 import java.awt.Font;
@@ -20,7 +26,7 @@ import java.awt.Color;
 
 public class GUI implements ActionListener {
 
-	private JFrame frame;
+	JFrame frame;
 	private JTextField textComments;
 	private JComboBox comboBox;
 	private JSlider technicalSlider;
@@ -31,33 +37,28 @@ public class GUI implements ActionListener {
 	private JButton btnCalculateAverageScore;
 	private JButton btnSubmit;
 	private JButton btnClear;
-	
-	//these are fields that will be used to hold the values pulled from the interface
-    int q1;
-    int q2;
-    int q3;
-    int q4;
-    String comments;
-    double teamAvg;
+
+	// these are fields that will be used to hold the values pulled from the
+	// interface
+	Integer ID;
+	int q1;
+	int q2;
+	int q3;
+	int q4;
+	String comments;
+	double teamAvg;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					GUI window = new GUI();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+
 	}
 
 	/**
 	 * Create the application.
+	 * 
+	 * @wbp.parser.entryPoint
 	 */
 	public GUI() {
 		initialize();
@@ -74,7 +75,7 @@ public class GUI implements ActionListener {
 		frame.getContentPane().setLayout(null);
 
 		comboBox = new JComboBox();
-		comboBox.setBounds(190, 28, 200, 20);
+		comboBox.setBounds(190, 28, 224, 20);
 		frame.getContentPane().add(comboBox);
 
 		technicalSlider = new JSlider();
@@ -125,7 +126,7 @@ public class GUI implements ActionListener {
 		frame.getContentPane().add(textAverageScore);
 
 		JLabel lblNewLabel = new JLabel("Technical");
-		lblNewLabel.setBounds(74, 87, 49, 14);
+		lblNewLabel.setBounds(74, 91, 49, 14);
 		frame.getContentPane().add(lblNewLabel);
 
 		JLabel lblUseful = new JLabel("Useful");
@@ -140,9 +141,9 @@ public class GUI implements ActionListener {
 		lblOverall.setBounds(74, 254, 49, 14);
 		frame.getContentPane().add(lblOverall);
 
-		JLabel lblTeam = new JLabel("Team");
+		JLabel lblTeam = new JLabel("Team Number : ");
 		lblTeam.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblTeam.setBounds(74, 29, 49, 14);
+		lblTeam.setBounds(74, 29, 106, 14);
 		frame.getContentPane().add(lblTeam);
 
 		JLabel lblComments = new JLabel("Comments");
@@ -161,9 +162,12 @@ public class GUI implements ActionListener {
 		btnClear.setBounds(301, 486, 89, 23);
 		frame.getContentPane().add(btnClear);
 
+		btnSubmit.setEnabled(false);
+
 		btnCalculateAverageScore.addActionListener(this);
 		btnSubmit.addActionListener(this);
 		btnClear.addActionListener(this);
+		teamLoader();
 	}
 
 	public void actionPerformed(ActionEvent event) {
@@ -176,7 +180,39 @@ public class GUI implements ActionListener {
 			teamAvg = (double) (q1 + q2 + q3 + q4) / 4;
 			String avgString = Double.toString(teamAvg);
 			textAverageScore.setText(avgString + " out of 8.0");
+		} else if (event.getSource() == btnClear) {
+			btnSubmit.setEnabled(false);
+			technicalSlider.setValue(5);
+			usefulSlider.setValue(5);
+			claritySlider.setValue(5);
+			overallSlider.setValue(5);
+			textAverageScore.setText("");
+			textComments.setText("Please add Team Names Here!");
+		} else if (event.getSource() == btnSubmit) {
+			q1 = technicalSlider.getValue();
+			q2 = usefulSlider.getValue();
+			q3 = claritySlider.getValue();
+			q4 = overallSlider.getValue();
+			teamAvg = (double) (q1 + q2 + q3 + q4) / 4;
+			comments = textComments.getText();
+			ID = comboBox.getSelectedIndex()+1;
+			TeamManager tm = new TeamManager();
+			tm.updateTeam(ID, q1, q2, q3, q4, comments, teamAvg);
 		}
 
+	}
+
+	public void teamLoader() {
+		Session session = HibernateUtil.buildSessionFactory().openSession();
+		Transaction tx = null;
+		tx = session.beginTransaction();
+		List teams = session.createQuery("FROM TeamScore").list();
+		for (Iterator iterator = teams.iterator(); iterator.hasNext();) {
+			TeamScore ts = (TeamScore) iterator.next();
+			comboBox.addItem(ts.getId());
+		}
+		// Commit the save
+		tx.commit();
+		session.close();
 	}
 }
